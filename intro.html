@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Portfolio — Engineering Exploration</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f3ee;
+  --surface:#fffdfb;
+  --surface-2:#efe8df;
+  --ink:#17120d;
+  --muted:#665a4f;
+  --accent:#b23f2b;
+  --accent-2:#5f7f64;
+  --line:#d8cabd;
+  --shadow:0 18px 45px rgba(58,42,30,.10);
+  --shadow-soft:0 10px 26px rgba(58,42,30,.07);
+  --radius:14px;
+  --max:1180px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  color:var(--ink);
+  background:
+    linear-gradient(rgba(255,255,255,.38) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.38) 1px,transparent 1px),
+    linear-gradient(135deg,#fffaf5 0%,#f7f0e5 34%,#eef5ef 68%,#f2f5fb 100%);
+  background-size:34px 34px,34px 34px,100% 100%;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(110deg,rgba(178,63,43,.08),transparent 34%,rgba(95,127,100,.08));
+  z-index:-1;
+}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow-soft);border:1px solid rgba(216,202,189,.75)}
+
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  height:72px;padding:0 clamp(20px,6vw,84px);
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  background:rgba(255,253,251,.88);
+  border-bottom:1px solid rgba(216,202,189,.85);
+  backdrop-filter:blur(18px);
+  box-shadow:0 8px 28px rgba(58,42,30,.06);
+  animation:navEnter .55s var(--ease) both;
+}
+.logo,.nav-logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;letter-spacing:.01em;color:var(--ink)}
+.logo span,.nav-logo em{color:var(--accent);font-style:normal}
+.nav-links{display:none;align-items:center;gap:24px}
+.nav-links a{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);position:relative;padding:8px 0}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+.nav-links a:hover{color:var(--ink)}.nav-links a:hover::after{transform:scaleX(1)}
+.burger{display:block;width:40px;height:40px;border:1px solid rgba(216,202,189,.9);border-radius:999px;background:rgba(255,255,255,.65);cursor:pointer;position:relative;z-index:1100;transition:transform .25s var(--ease),border-color .25s,background .25s}
+.burger:hover{transform:translateY(-2px);border-color:var(--accent);background:#fff}
+.burger span{position:absolute;left:10px;right:10px;height:2px;background:var(--ink);border-radius:2px;transition:top .35s var(--ease),transform .35s var(--ease),opacity .25s,left .25s,right .25s}
+.burger span:nth-child(1){top:12px}.burger span:nth-child(2){top:19px}.burger span:nth-child(3){top:26px}
+.burger.open span:nth-child(1){top:19px;transform:rotate(45deg)}.burger.open span:nth-child(2){opacity:0;left:50%;right:50%}.burger.open span:nth-child(3){top:19px;transform:rotate(-45deg)}
+.drawer-overlay{position:fixed;inset:0;z-index:1040;background:rgba(23,18,13,.42);opacity:0;visibility:hidden;transition:opacity .3s var(--ease),visibility .3s var(--ease)}
+.drawer-overlay.show{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:1050;width:min(340px,88vw);padding:96px 32px 28px;background:var(--surface);border-left:1px solid var(--line);box-shadow:-28px 0 70px rgba(23,18,13,.14);display:flex;flex-direction:column;gap:0;overflow-y:auto;transform:translateX(100%);transition:transform .45s var(--ease)}
+.drawer.open{transform:translateX(0)}
+.drawer a{font-family:'Playfair Display',serif;font-size:1.22rem;font-weight:700;line-height:1.25;color:var(--ink);padding:13px 0;border-bottom:1px solid rgba(216,202,189,.68);opacity:.88;transform:translateX(12px);transition:transform .32s var(--ease),opacity .32s var(--ease),color .2s,padding-left .2s}
+.drawer.open a{opacity:1;transform:none}.drawer a:hover{color:var(--accent);padding-left:8px}.drawer-footer{margin-top:auto;padding-top:24px;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+.hero{min-height:70vh;display:flex;align-items:center;padding:128px clamp(20px,6vw,84px) 76px}
+.hero-inner{width:100%;max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);gap:clamp(28px,5vw,64px);align-items:center}
+.hero-inner>*{animation:panelEnter .75s var(--ease) both}.hero-inner>*:nth-child(2){animation-delay:.12s}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;margin-bottom:16px;font-size:.74rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)}
+.eyebrow::before{content:"";width:34px;height:2px;background:var(--accent);display:inline-block}
+h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,5.35rem);line-height:1.02;letter-spacing:0;margin-bottom:22px;color:var(--ink)}
+h1 em{font-style:italic;color:var(--accent)}
+.hero p,.hero-desc{max-width:650px;font-size:1.02rem;line-height:1.85;color:var(--muted)}
+.btns,.cta-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:30px}
+.btn,.btn-primary,.btn-ghost,.sheet-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:12px 22px;border-radius:999px;border:1px solid var(--line);background:rgba(255,253,251,.72);font-size:.8rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);position:relative;overflow:hidden;transition:transform .24s var(--ease),box-shadow .24s var(--ease),background .24s,border-color .24s,color .24s}
+.btn.primary,.btn-primary,.sheet-link{background:var(--accent);border-color:var(--accent);color:#fff}.btn:hover,.btn-primary:hover,.btn-ghost:hover,.sheet-link:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(178,63,43,.16);border-color:var(--accent)}
+.card{background:linear-gradient(180deg,#fffdfb,#fbf6ef);border:1px solid rgba(216,202,189,.95);border-radius:var(--radius);padding:clamp(24px,3vw,36px);box-shadow:var(--shadow)}
+.card h3{font-family:'Playfair Display',serif;font-size:1.45rem;margin-bottom:12px}.card p{color:var(--muted);line-height:1.8;margin:.45rem 0}
+
+section{padding:86px clamp(20px,6vw,84px)}
+.container,.modules-inner{max-width:var(--max);margin:0 auto}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.15rem);line-height:1.08;margin-bottom:12px;color:var(--ink)}
+.section-sub{max-width:760px;color:var(--muted);line-height:1.8;margin-bottom:34px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:34px;padding-bottom:18px;border-bottom:1px solid var(--line)}.section-head h2{font-family:'Playfair Display',serif;font-size:2.25rem}.section-head span{font-size:.76rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.modules,.journey,.team-section,.bom-section{background:rgba(255,253,251,.46);border-top:1px solid rgba(216,202,189,.5);border-bottom:1px solid rgba(216,202,189,.5)}
+.modules-grid,.project-grid,.team-grid,.alt-grid,.sdg-grid,.sprint-grid,.concepts-grid,.sections-grid,.pin-grid,.calc-grid,.spec-grid,.flow-grid,.components-grid,.comp-grid,.tree-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+.module,.project,.member,.content-block,.definition-box,.reflection-box,.alt-card,.alt-item,.sdg-card,.sprint-card,.concept-card,.section-card,.pin-card,.calc-card,.spec-card,.flow-step,.comp-card,.tree-node,.topic-block,.lca-step,.total-banner{background:rgba(255,253,251,.9);border:1px solid rgba(216,202,189,.92);border-radius:var(--radius);padding:clamp(22px,3vw,32px);box-shadow:var(--shadow-soft);color:var(--ink);transition:transform .34s var(--ease),box-shadow .34s var(--ease),border-color .25s,background .25s}
+.module:hover,.project:hover,.member:hover,.content-block:hover,.definition-box:hover,.reflection-box:hover,.alt-card:hover,.alt-item:hover,.sdg-card:hover,.sprint-card:hover,.concept-card:hover,.section-card:hover,.pin-card:hover,.calc-card:hover,.spec-card:hover,.flow-step:hover,.comp-card:hover,.tree-node:hover,.topic-block:hover,.lca-step:hover{transform:translateY(-6px);box-shadow:0 18px 42px rgba(58,42,30,.12);border-color:rgba(178,63,43,.48);background:#fffdfb}
+.module h3,.project h3,.member h3,.content-block h3,.timeline-item h3,.concept-card h3,.section-card h3,.calc-card h3,.topic-block h3{font-family:'Playfair Display',serif;font-size:1.28rem;margin-bottom:10px}.module p,.project p,.member p,.content-block p,.definition-box p,.reflection-box p,.alt-card p,.alt-item p,.sdg-card p,.sprint-card p,.concept-card p,.section-card p,.pin-card p,.calc-card p,.spec-card p,.flow-step p,.comp-card p,.tree-node p,.topic-block p,li{color:var(--muted);line-height:1.75}.arrow{display:inline-block;margin-top:18px;font-weight:800;color:var(--accent)}
+.num,.avatar,.pin-num,.spec-value,.flow-step-num,.total-value,.comp-icon,.sdg-icon,.sprint-num,.step-num,.mod-num{font-family:'Playfair Display',serif;font-size:2.05rem;line-height:1;color:var(--accent);margin-bottom:14px}.avatar{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:rgba(178,63,43,.1);border:1px solid rgba(178,63,43,.22)}
+.tag,.concept-label,.section-label,.pin-name,.label,.total-unit{display:inline-flex;align-items:center;margin:0 8px 10px 0;padding:6px 10px;border-radius:999px;background:rgba(178,63,43,.08);border:1px solid rgba(178,63,43,.18);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}.info-row,.sensor-tags{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px}
+.timeline{position:relative;border-left:2px solid rgba(178,63,43,.55);padding-left:30px}.timeline-item{position:relative;margin-bottom:28px;padding-bottom:4px}.timeline-item::before{content:"";position:absolute;left:-39px;top:6px;width:15px;height:15px;border-radius:50%;background:var(--surface);border:3px solid var(--accent);box-shadow:0 0 0 6px rgba(178,63,43,.08)}
+.quote,.quote-section{max-width:var(--max);margin:0 auto;padding:62px clamp(22px,5vw,70px);text-align:center;font-family:'Playfair Display',serif;font-size:clamp(1.45rem,3vw,2.25rem);line-height:1.35;color:var(--accent)}
+footer{padding:36px 20px;text-align:center;border-top:1px solid var(--line);background:rgba(255,253,251,.72);color:var(--muted);font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+
+.table-wrap{overflow-x:auto;margin-top:24px;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-soft);background:var(--surface)}
+table,.data-table,.roleplay-table{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--surface)}
+th{background:#2f2721;color:#fff;text-align:left;padding:14px 16px;font-weight:800;letter-spacing:.03em}td{padding:13px 16px;border-bottom:1px solid rgba(216,202,189,.72);color:var(--ink);vertical-align:top}tr:nth-child(even) td{background:rgba(239,232,223,.38)}tr:last-child td{border-bottom:0}.score-row td,.total-row td{font-weight:800;background:rgba(178,63,43,.1)!important;color:var(--accent)}
+.formula-list{display:flex;flex-direction:column;gap:13px}.formula-row{display:flex;align-items:baseline;gap:14px;padding:14px 16px;border-left:4px solid var(--accent);border-radius:10px;background:rgba(255,253,251,.82);box-shadow:0 8px 18px rgba(58,42,30,.05)}.expr{font-family:Georgia,serif;color:var(--ink)}.result{background:rgba(178,63,43,.1)}
+.code-wrap{background:#181512;color:#f8efe4;border:1px solid #30271f;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}.code-header{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#2b241e;padding:12px 16px}.code-dots{display:flex;gap:7px}.code-dot{width:10px;height:10px;border-radius:50%;animation:dotStatus 3s ease-in-out infinite}.red{background:#e36b5a}.yellow{background:#e4bf5a}.green{background:#75c47b}.code-filename{font-size:.78rem;color:#d8cabd}.code-body{padding:22px;overflow:auto;font-family:Consolas,Monaco,monospace;font-size:.88rem;line-height:1.68}.kw{color:#f2bc78}.st{color:#a8d59d}.cm{color:#988e83}.fn{color:#91c6e6}.nm{color:#f09a74}
+.lca-steps{display:grid;gap:18px}.original{border-color:rgba(178,63,43,.45)}.green{color:#4f8a59}.yellow{color:#a67c22}
+
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .75s var(--ease),transform .75s var(--ease);will-change:opacity,transform}.reveal.active{opacity:1;transform:none}
+.modules-grid .reveal:nth-child(2),.project-grid .reveal:nth-child(2),.team-grid .reveal:nth-child(2),.alt-grid .reveal:nth-child(2),.concepts-grid .reveal:nth-child(2),.sections-grid .reveal:nth-child(2),.pin-grid .reveal:nth-child(2),.calc-grid .reveal:nth-child(2),.spec-grid .reveal:nth-child(2),.flow-grid .reveal:nth-child(2),.components-grid .reveal:nth-child(2){transition-delay:.07s}
+.modules-grid .reveal:nth-child(3),.project-grid .reveal:nth-child(3),.team-grid .reveal:nth-child(3),.alt-grid .reveal:nth-child(3),.concepts-grid .reveal:nth-child(3),.sections-grid .reveal:nth-child(3),.pin-grid .reveal:nth-child(3),.calc-grid .reveal:nth-child(3),.spec-grid .reveal:nth-child(3),.flow-grid .reveal:nth-child(3),.components-grid .reveal:nth-child(3){transition-delay:.14s}
+.modules-grid .reveal:nth-child(n+4),.project-grid .reveal:nth-child(n+4),.team-grid .reveal:nth-child(n+4),.alt-grid .reveal:nth-child(n+4),.concepts-grid .reveal:nth-child(n+4),.sections-grid .reveal:nth-child(n+4),.pin-grid .reveal:nth-child(n+4),.calc-grid .reveal:nth-child(n+4),.spec-grid .reveal:nth-child(n+4),.flow-grid .reveal:nth-child(n+4),.components-grid .reveal:nth-child(n+4){transition-delay:.2s}
+@keyframes navEnter{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}@keyframes panelEnter{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}@keyframes dotStatus{0%,100%{transform:scale(1);opacity:.72}50%{transform:scale(1.22);opacity:1}}
+@media(min-width:980px){.nav-links{display:flex}.burger{margin-left:8px}}
+@media(max-width:900px){nav{padding:0 20px}.hero{min-height:62vh;padding:112px 22px 58px}.hero-inner{grid-template-columns:1fr;gap:28px}section{padding:64px 22px}.drawer a{font-size:1.08rem}.btns,.cta-row{align-items:stretch}.btn,.btn-primary,.btn-ghost,.sheet-link{width:100%}.table-wrap{margin-left:-4px;margin-right:-4px}}
+@media(max-width:560px){h1{font-size:2.55rem}.section-title{font-size:2rem}.card,.module,.project,.member,.content-block,.definition-box,.reflection-box,.topic-block{padding:22px}.quote,.quote-section{padding:46px 22px}.modules-grid,.project-grid,.team-grid,.alt-grid,.sdg-grid,.sprint-grid,.concepts-grid,.sections-grid,.pin-grid,.calc-grid,.spec-grid,.flow-grid,.components-grid,.comp-grid,.tree-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Engineering <span>Exploration</span></div>
+  <div class="nav-links">
+    <a href="index.html">Portfolio</a>
+    <a href="intro.html">Introduction</a>
+    <a href="page2-management.html">Project Mgmt</a>
+    <a href="page3-sustainability.html">Sustainability</a>
+  </div>
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Dimmed backdrop -->
+<div class="drawer-overlay" id="overlay"></div>
+
+<!-- Slide-in nav drawer -->
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Navigation menu">
+  <a href="intro.html">1.About us</a>
+  <a href="introduction.html">2.Introdution </a>
+  <a href="prob.html">2.1 Project Mangement </a>
+  <a href="sus.html">3.Sustainability in Engineering</a>
+  <a href="exdes.html">4.Engineering Design</a>
+  <a href="mac.html">5.Mechanisms</a>
+  <a href="plat.html">6.Platform-Based</a>
+  <a href="eth.html">7.Ethics</a>
+    <a href="#">8.Course project </a>
+    <a href="ED.html">8.1 . ED Worksheet </a>
+    <a href="prob.html">8.2. Problem Defination </a>
+  <a href="congen.html">8.3. Concept Genration </a>
+     <a href="conev.html">8.4. Concept Evaluation </a>       
+   <a href="vis.html">8.5. Virtual Implementation </a>
+   <a href="py.html">8.6. Physical Implementation </a>
+   <a href="msbs.html">8.7. MSBS Calculation </a>
+  <a href="e.html">8.8. 	Embodied Energy </a>
+   <a href="ar.html">8.9. Arduino Code </a>
+  <a href="team.html">9.Team Work</a>
+  <a href="learn.html">10.Learning of the </a>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Engineering Exploration · KLE Technological University</div>
+      <h1>My Portfolio</h1>
+      <p class="hero-desc">A first-year Computer Science Engineering student's journey through curiosity, problem-solving, and hands-on exploration of engineering concepts — from fundamentals to sustainability.</p>
+      <div class="info-row">
+        <span class="tag">N,B,VARUN</span>
+        <span class="tag">Roll No. 451</span>
+        <span class="tag">Division D</span>
+        <span class="tag">USN 01FE25BCS272</span>
+        <span class="tag">Team 13</span>
+      </div>
+      <div class="btns">
+        <a class="btn primary" href="#modules">Explore Modules</a>
+        <a class="btn" href="page1-intro.html">Start Reading</a>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Portfolio Contents</h3>
+      <p>1 · Introduction To Engineering</p>
+      <p>2 · Project Management</p>
+      <p>3 · Sustainability in Engineering</p>
+      <p>Mentor: N. AkshayKumar Sir</p>
+      <p>Project: INSECTRONICS — Ladybug</p>
+    </div>
+  </div>
+</section>
+
+<section id="modules">
+  <div class="container">
+    <h2 class="section-title reveal">Course Modules</h2>
+    <p class="section-sub reveal">Three modules explored across the Engineering Exploration course, each building toward applied engineering practice.</p>
+    <div class="modules-grid">
+      <a class="module reveal" href="page1-intro.html">
+        <div class="num">01</div>
+        <h3>Introduction to Engineering</h3>
+        <p>Ice-breaking activities, the Bangalore sewage problem case study, and a reverse engineering activity.</p>
+        <div class="arrow">Read more →</div>
+      </a>
+      <a class="module reveal" href="page2-management.html">
+        <div class="num">02</div>
+        <h3>Project Management</h3>
+        <p>Agile, Scrum, Sprint frameworks — and hands-on class activities including paper planes and car building.</p>
+        <div class="arrow">Read more →</div>
+      </a>
+      <a class="module reveal" href="page3-sustainability.html">
+        <div class="num">03</div>
+        <h3>Sustainability in Engineering</h3>
+        <p>UN Sustainable Development Goals, Life Cycle Assessment, Carbon Footprint, and Embodied Energy.</p>
+        <div class="arrow">Read more →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="team-section">
+  <div class="container">
+    <h2 class="section-title reveal">Team 13</h2>
+    <p class="section-sub reveal">A group of four first-year engineering students who collaborated across all activities.</p>
+    <div class="team-grid">
+      <div class="member reveal">
+        <div class="avatar">R</div>
+        <h4>Rachel Gama</h4>
+        <p>Roll No. 447</p>
+      </div>
+      <div class="member reveal">
+        <div class="avatar">V</div>
+        <h4>N. B. Varun</h4>
+        <p>Roll No. 451</p>
+      </div>
+      <div class="member reveal">
+        <div class="avatar">P</div>
+        <h4>Prajwal Patil</h4>
+        <p>Roll No. 436</p>
+      </div>
+      <div class="member reveal">
+        <div class="avatar">P</div>
+        <h4>Pradeep M</h4>
+        <p>Roll No. 437</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="quote-section reveal">
+  "A single leaf working alone provides no shade."
+  <small>— Chuck Page</small>
+</div>
+
+<footer>© 2026 Engineering Exploration Portfolio · Rachel Gama · KLE Technological University</footer>
+
+<script>
+// ── NAV SHADOW ON SCROLL ──
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.boxShadow =
+    scrollY > 50 ? '0 4px 20px rgba(0,0,0,.05)' : 'none';
+});
+
+// ── REVEAL ON SCROLL ──
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('active'); });
+}, { threshold: .15 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── HAMBURGER MENU ──
+const burger  = document.getElementById('burger');
+const drawer  = document.getElementById('drawer');
+const overlay = document.getElementById('overlay');
+
+function openMenu() {
+  burger.classList.add('open');
+  drawer.classList.add('open');
+  overlay.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  burger.setAttribute('aria-expanded', 'true');
+  burger.setAttribute('aria-label', 'Close menu');
+}
+
+function closeMenu() {
+  burger.classList.remove('open');
+  drawer.classList.remove('open');
+  overlay.classList.remove('show');
+  document.body.style.overflow = '';
+  burger.setAttribute('aria-expanded', 'false');
+  burger.setAttribute('aria-label', 'Open menu');
+}
+
+burger.addEventListener('click', () =>
+  drawer.classList.contains('open') ? closeMenu() : openMenu()
+);
+overlay.addEventListener('click', closeMenu);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && drawer.classList.contains('open')) closeMenu();
+});
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+</script>
+</body>
+</html>
